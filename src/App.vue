@@ -38,7 +38,7 @@
             <v-chip
               :color="getPLColor(item.profit-item.charge-item.interest)"
               dark
-            >{{ floor2(item.profit-item.charge-item.interest) }}</v-chip>
+            >{{ item.netprofit=floor2(item.profit-item.charge-item.interest) }}</v-chip>
           </template>
         </v-data-table>
       </v-card>
