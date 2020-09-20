@@ -3,20 +3,12 @@
     <v-app-bar app clipped-left>
       <v-toolbar-title>Tx Report</v-toolbar-title>
       <v-text-field
-        label="API-ID"
-        name="apiid"
-        prepend-icon="mdi-identifier"
-        type="text"
-        v-model="creds.apiId"
-      ></v-text-field>
-
-      <v-text-field
         id="password"
-        label="API-Key"
-        name="apikey"
+        label="Token"
+        name="token"
         prepend-icon="mdi-key"
         type="password"
-        v-model="creds.apiKey"
+        v-model="creds.token"
       ></v-text-field>
       <v-spacer></v-spacer>
       <v-btn raised @click="loadData()">Load Data</v-btn>
@@ -34,15 +26,21 @@ export default {
   data() {
     return {
       creds: {
-        apiId: "",
-        apiKey: ""
+        token: ""
       }
     };
   },
   methods: {
     async loadData() {
-      if (this.creds.apiId && this.creds.apiKey) {
-        const data = await getOrderHistory(this.creds.apiId, this.creds.apiKey);
+      if (this.creds.token && this.creds.token !== "") {
+        var data = {};
+        const response = await getOrderHistory(
+          this.creds.token,
+          1,
+          99999,
+          false
+        );
+        data = await response.json();
         console.log(data);
       } else {
         console.log("invalid creds!");

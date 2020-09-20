@@ -1,45 +1,28 @@
-import HmacSHA256 from "crypto-js/hmac-sha256";
+const snapexEndpoints = {
+  orderHistory: "https://www.snapex.com/app/Purchase/queryHistory"
+};
 
-function pad(n) {
-  return n < 10 ? "0" + n : n;
-}
+export async function getOrderHistory(token, pageNum, pageSize, simulated) {
+  const params = {
+    token: token,
+    pageNum: pageNum,
+    pageSize: pageSize,
+    simulatedTradingStatus: simulated ? 1 : 0
+  };
 
-export async function getOrderHistory(apiId, apiKey) {
-  const localTime = new Date();
-  const utc = localTime.getTime() + localTime.getTimezoneOffset() * 60000;
-  // const singaporeOffset = 8;
-  // const d = new Date(utc + 3600000 * singaporeOffset);
-  const d = new Date(utc);
-  const timeStamp = encodeURIComponent(
-    `${pad(d.getFullYear())}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(
-      d.getHours()
-    )}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
-  );
-  // const preSignedText = `GET
-  // api.snapex.com
-  // /v1/orders/history/get
-  // AccessKey=${apiId}&SignatureMethod=HmacSHA256&SignatureVersion=1&Timestamp=${timeStamp}`;
+  var formData = "";
+  var i = 0;
+  for (var k in params) {
+    formData += i++ === 0 ? k + "=" + params[k] : "&" + k + "=" + params[k];
+  }
 
-  const preSignedText =
-    "GET\n" +
-    "api.snapex.com\n" +
-    "/v1/orders/history/get\n" +
-    "AccessKey=" +
-    apiId +
-    "&SignatureMethod=HmacSHA256&SignatureVersion=1" +
-    "&Timestamp=" +
-    timeStamp;
+  var request = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: formData
+  };
 
-  console.log("preSignedText: " + preSignedText);
-  const signature = btoa(HmacSHA256(preSignedText, apiKey));
-  console.log("signature: " + signature);
-
-  const url = `https://api.snapex.com/v1/orders/history/get?AccessKey=${apiId}&SignatureMethod=HmacSHA256&SignatureVersion=1&Timestamp=${timeStamp}&Signature=${encodeURIComponent(
-    signature
-  )}`;
-  console.log(`fetch from: ${url}`);
-
-  return fetch(url, {
-    method: "get"
-  });
+  return fetch(snapexEndpoints.orderHistory, request);
 }
