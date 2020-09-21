@@ -35,13 +35,7 @@
                   hide-details
                 ></v-text-field>
               </v-card-title>
-              <v-data-table
-                dense
-                calculate-widths
-                :headers="headers"
-                :items="records"
-                :search="search"
-              >
+              <v-data-table dense :headers="headers" :items="records" :search="search">
                 <template
                   v-slot:item.ordertime="{ item }"
                 >{{ (item.ordertime && item.ordertime!=="")?item.ordertime:item.pendingTime }}</template>
@@ -100,12 +94,12 @@ export default {
         token: ""
       },
       headers: [
-        // {
-        //   text: "OrderId",
-        //   align: "start",
-        //   sortable: false,
-        //   value: "code"
-        // },
+        {
+          text: "OrderId",
+          align: "start d-none",
+          sortable: false,
+          value: "code"
+        },
         { text: "OpenTime", value: "ordertime" },
         { text: "CloseTime", value: "overtime" },
         { text: "ContractName", value: "currencyname" },
