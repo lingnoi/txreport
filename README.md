@@ -1,2 +1,2 @@
 # txreport
-Create reports from Snapex records
+Create reports from binance records
